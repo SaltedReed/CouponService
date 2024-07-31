@@ -1,5 +1,11 @@
 package com.coupon.controller;
 
+import com.coupon.common.Result;
+import com.coupon.dao.CouponCommodityRelationDAO;
+import com.coupon.dao.CouponInstanceDAO;
+import com.coupon.dao.CouponTemplateDAO;
+import com.coupon.entity.CouponInstance;
+import com.coupon.entity.CouponTemplate;
 import org.apache.rocketmq.client.producer.MQProducer;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.redisson.api.RLock;
@@ -8,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.data.redis.core.script.RedisScript;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,9 +31,28 @@ public class TestController {
     private RedisTemplate<String, Object> redisTemplate;
     @Autowired
     private RocketMQTemplate rocketMQTemplate;
+    @Autowired
+    private CouponTemplateDAO templateDAO;
+    @Autowired
+    private CouponCommodityRelationDAO couponCommodityRelationDAO;
+    @Autowired
+    private CouponInstanceDAO instanceDAO;
 
-    public void testMQ() {
-        
+    @PostMapping("/insert-instance")
+    public void testInsertInstance(CouponInstance instance) {
+        instanceDAO.insert(instance);
+    }
+
+    @GetMapping("/count")
+    public Result<Integer> testCount(long userId, long couponId) {
+        int count = instanceDAO.count(userId, couponId);
+        return Result.success(count);
+    }
+
+    @GetMapping("/get-template")
+    public Result<CouponTemplate> testGetTemplate(long couponId) {
+        CouponTemplate template = templateDAO.get(couponId);
+        return Result.success(template);
     }
 
     @PostMapping("/lua")

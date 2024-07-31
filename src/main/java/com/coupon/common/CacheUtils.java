@@ -13,6 +13,10 @@ public class CacheUtils {
         return "coupon:list:" + userId;
     }
 
+    public static String getCouponCountKey(long userId, long couponId) {
+        return "coupon:count:" + userId + ":" + couponId;
+    }
+
     public static String getCouponTemplateKey(long couponId) {
         return "coupon:template:" + couponId;
     }

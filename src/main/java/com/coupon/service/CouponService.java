@@ -2,15 +2,13 @@ package com.coupon.service;
 
 import com.coupon.dto.CouponTemplateDTO;
 
-import javax.validation.constraints.NotNull;
-
 public interface CouponService {
     /**
      * 创建优惠券
      * @param templateDTO 券信息
      * @return 如果创建成功，返回券ID，否则返回null
      */
-    Long createCoupon(@NotNull CouponTemplateDTO templateDTO);
+    Long createCoupon(CouponTemplateDTO templateDTO);
 
     /**
      * 发放优惠券

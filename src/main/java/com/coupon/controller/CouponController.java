@@ -4,26 +4,30 @@ import com.coupon.common.Result;
 import com.coupon.dto.CouponTemplateDTO;
 import com.coupon.service.CouponService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/coupon")
+@Validated
 public class CouponController {
     @Autowired
     private CouponService couponService;
 
     @PostMapping("/create")
-    public Result<Long> createCoupon(@Valid CouponTemplateDTO templateDTO) {
+    public Result<Long> createCoupon(@Valid @NotNull CouponTemplateDTO templateDTO) {
         Long couponId = couponService.createCoupon(templateDTO);
         return (null == couponId ? Result.error("") : Result.success(couponId));
     }
 
     @PostMapping("/offer")
-    public Result<Void> offerCoupon(long userId, long couponId) {
+    public Result<Void> offerCoupon(@Min(0) long userId, @Min(0) long couponId) {
         Integer res = couponService.offerCoupon(userId, couponId);
         switch (res) {
             case 0:
@@ -40,7 +44,7 @@ public class CouponController {
     }
 
     @PostMapping("/use")
-    public Result<Void> useCoupon(long userId, long couponId, long orderId) {
+    public Result<Void> useCoupon(@Min(0) long userId, @Min(0) long couponId, @Min(0) long orderId) {
         Integer res = couponService.useCoupon(userId, couponId, orderId);
         switch (res) {
             case 0:
