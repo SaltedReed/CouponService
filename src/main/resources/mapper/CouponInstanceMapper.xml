@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coupon.dao.mapper.CouponInstanceMapper">
+    <select id="count" resultType="int">
+        select count(1) from t_coupon_instance
+        where user_id = #{userId} and coupon_id = #{couponId}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into t_coupon_instance (coupon_id,user_id,state,receive_time,use_time,order_id)
+        values (#{couponId},#{userId},#{state},#{receiveTime},#{useTime},#{orderId})
+    </insert>
+
+    <select id="selectStateForUpdate" resultType="int">
+        select state from t_coupon_instance
+        where user_id = #{userId} and coupon_id = #{couponId}
+        for update
+    </select>
+
+    <update id="updateState_UseTime_OrderId">
+        update t_coupon_instance
+        set state = #{state}, use_time = #{useTime}, order_id = #{orderId}
+        where user_id = #{userId} and coupon_id = #{couponId}
+    </update>
+
+    <update id="updateState">
+        update t_coupon_instance
+        set state = #{state}
+        where user_id = #{userId} and coupon_id = #{couponId}
+    </update>
+</mapper>

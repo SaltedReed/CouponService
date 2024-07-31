@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coupon.dao.mapper.CouponTemplateMapper">
+    <resultMap id="stock2dto" type="com.coupon.dto.CouponStockDTO">
+        <result property="couponId" column="id"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into t_coupon_template (name,content,scope_type,scope,user_type,discount_type,discount_threshold,discount_value,start_time,end_time,max_stock,stock)
+        values (#{name},#{content},#{scopeType},#{scope},#{userType},#{discountType},#{discountThreshold},#{discountValue},#{startTime},#{endTime},#{maxStock},#{maxStock})
+    </insert>
+
+    <select id="get" resultType="com.coupon.entity.CouponTemplate">
+        select * from t_coupon_template
+        where id = #{couponId}
+    </select>
+
+    <select id="getAllStocks" resultMap="stock2dto">
+        select id,stock from t_coupon_template;
+    </select>
+
+    <select id="selectStockForUpdate" resultType="int">
+        select stock from t_coupon_template
+        where id = #{couponId}
+        for update
+    </select>
+
+    <update id="incrStockBy">
+        update t_coupon_template set stock = stock + #{delta}
+        where id = #{couponId}
+    </update>
+</mapper>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coupon.dao.mapper.CouponCommodityRelationMapper">
+    <insert id="insertAll" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into t_coupon_commodity_relation (coupon_id,commodity_id)
+        values
+            <foreach collection="relations" item="item" separator=",">
+                (#{item.couponId},#{item.commodityId})
+            </foreach>
+    </insert>
+</mapper>
