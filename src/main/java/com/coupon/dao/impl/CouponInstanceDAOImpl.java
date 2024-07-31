@@ -4,11 +4,13 @@ import com.coupon.common.CacheUtils;
 import com.coupon.dao.CouponInstanceDAO;
 import com.coupon.dao.mapper.CouponInstanceMapper;
 import com.coupon.entity.CouponInstance;
+import com.coupon.vo.CouponVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Repository
@@ -57,5 +59,10 @@ public class CouponInstanceDAOImpl implements CouponInstanceDAO {
     @Override
     public int updateState(long userId, long couponId, int state) {
         return instanceMapper.updateState(userId, couponId, state);
+    }
+
+    @Override
+    public List<CouponVO> selectAllOf(long userId) {
+        return instanceMapper.selectAllOf(userId);
     }
 }

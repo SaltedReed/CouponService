@@ -1,6 +1,9 @@
 package com.coupon.service;
 
 import com.coupon.dto.CouponTemplateDTO;
+import com.coupon.vo.CouponVO;
+
+import java.util.List;
 
 public interface CouponService {
     /**
@@ -26,4 +29,11 @@ public interface CouponService {
      * @return 错误码，0：成功，1：优惠券状态!=未使用，2：数据库错误
      */
     Integer useCoupon(long userId, long couponId, long orderId);
+
+    /**
+     * 获取用户的所有优惠券信息
+     * @param userId 用户ID
+     * @return 用户的所有优惠券，包括已使用的和已过期的
+     */
+    List<CouponVO> getAllCoupons(long userId);
 }

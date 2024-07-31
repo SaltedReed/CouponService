@@ -10,7 +10,9 @@ import com.coupon.dto.CouponTemplateDTO;
 import com.coupon.entity.CouponCommodityRelation;
 import com.coupon.entity.CouponTemplate;
 import com.coupon.mq.message.CouponExpiryTrxMsg;
+import com.coupon.mq.message.CouponLowStockMsg;
 import com.coupon.service.CouponService;
+import com.coupon.vo.CouponVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,7 @@ import org.slf4j.LoggerFactory;
 @Slf4j
 public class CouponServiceImpl implements CouponService {
     private static final Logger logger = LoggerFactory.getLogger(CouponServiceImpl.class);
+    private static final int LOW_STOCK_THRESHOLD = 50;
 
     @Autowired
     private CouponTemplateDAO templateDAO;
@@ -141,6 +144,14 @@ public class CouponServiceImpl implements CouponService {
                     Message<String> msg = MessageBuilder.withPayload(MQUtils.obj2Payload(payload)).build();
                     rocketMQTemplate.sendMessageInTransaction(MQConstants.COUPON_EXPIRY_TRX_TOPIC, msg, null);
                     logger.info("sent CouponExpiryTrxMsg for userId=" + userId + ", couponId=" + couponId);
+
+                    // 低库存通知
+                    Integer stock = (Integer) redisTemplate.opsForValue().get(stockKey);
+                    if (stock < LOW_STOCK_THRESHOLD) {
+                        final CouponLowStockMsg lowStockPayload = new CouponLowStockMsg(couponId, stock, new Date());
+                        Message<String> lowStockMsg = MessageBuilder.withPayload(MQUtils.obj2Payload(lowStockPayload)).build();
+                        rocketMQTemplate.send(MQConstants.COUPON_LOW_STOCK_TOPIC, lowStockMsg);
+                    }
                 });
                 return 0;
             }
@@ -171,6 +182,11 @@ public class CouponServiceImpl implements CouponService {
                 }
             }
         });
+    }
+
+    @Override
+    public List<CouponVO> getAllCoupons(long userId) {
+        return instanceDAO.selectAllOf(userId);
     }
 
 }

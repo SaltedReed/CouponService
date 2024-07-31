@@ -30,4 +30,10 @@
         set state = #{state}
         where user_id = #{userId} and coupon_id = #{couponId}
     </update>
+
+    <select id="selectAllOf" resultType="com.coupon.vo.CouponVO">
+        select t_ct.name as name, t_ct.content as content, t_ct.start_time as start_time, t_ct.end_time as end_time, t_ci.state as state
+        from t_coupon_instance as t_ci left join t_coupon_template as t_ct on t_ci.coupon_id = t_ct.id
+        where t_ci.user_id = #{userId}
+    </select>
 </mapper>

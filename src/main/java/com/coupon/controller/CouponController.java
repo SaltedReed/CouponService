@@ -3,8 +3,10 @@ package com.coupon.controller;
 import com.coupon.common.Result;
 import com.coupon.dto.CouponTemplateDTO;
 import com.coupon.service.CouponService;
+import com.coupon.vo.CouponVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/coupon")
@@ -56,5 +60,11 @@ public class CouponController {
             default:
                 return Result.error(res.toString());
         }
+    }
+
+    @GetMapping("/getall")
+    public Result<List<CouponVO>> getAllCoupons(@Min(0) long userId) {
+        List<CouponVO> res = couponService.getAllCoupons(userId);
+        return Result.success(null == res ? new ArrayList<>() : res);
     }
 }

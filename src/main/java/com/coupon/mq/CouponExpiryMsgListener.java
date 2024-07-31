@@ -25,7 +25,7 @@ import java.util.Date;
  * 负责实现券自动过期
  */
 @Component
-@RocketMQMessageListener(topic = MQConstants.COUPON_EXPIRY_TRX_TOPIC, consumerGroup = "consumer-group-coupon-expiry")
+@RocketMQMessageListener(topic = MQConstants.COUPON_EXPIRY_TRX_TOPIC, consumerGroup = "consumer-group-1")
 public class CouponExpiryMsgListener implements RocketMQListener<String> {
     private static Logger logger = LoggerFactory.getLogger(CouponExpiryMsgListener.class);
 
